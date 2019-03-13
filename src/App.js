@@ -1,28 +1,40 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import { Global } from "@emotion/core";
+import { globalStyle } from "./lib/emotions";
+
+import Nav from "./components/nav";
+import { MainRender } from "./lib/routeconfig";
+
+/** @jsx jsx */
+import { jsx, css } from "@emotion/core";
+import TopLogo from "./components/toplogo";
 
 class App extends Component {
+  state = {
+    authUser: null
+  };
+
+  componentDidMount() {
+    this.props.userQuery.then(data => this.setState({ authUser: data }));
+  }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div css={appWrapper}>
+        <Global styles={globalStyle} />
+        <TopLogo />
+        <Nav authUser={this.state.authUser} />
+        <MainRender authUser={this.state.authUser} />
       </div>
     );
   }
 }
 
 export default App;
+
+const appWrapper = css`
+  display: flex;
+  flex-flow: row wrap;
+  width: 800px;
+  margin: 0 auto;
+`;
